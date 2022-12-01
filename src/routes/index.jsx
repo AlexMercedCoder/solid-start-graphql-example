@@ -1,14 +1,15 @@
 import { Title } from "solid-start";
 import Todo from "~/components/Todo";
 import { createRouteData } from "solid-start";
-import { gqlCall, GET_TODOS } from "~/lib/actions";
+import { client } from "~/lib/trpc/client";
 
 // define our route data, server provided data to frontend
 export function routeData() {
-  console.log("hello")
 return createRouteData(async () => {
-  const todos = await gqlCall(GET_TODOS);
-  console.log(await todos)
+  // fetch todos using client
+  const todos = await client.getTodos.query()
+
+  // return todos
   return await todos;
 });
 }

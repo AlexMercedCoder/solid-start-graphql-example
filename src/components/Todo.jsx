@@ -1,23 +1,21 @@
-import { gqlCall, CREATE_TODO } from "~/lib/actions";
+import { client } from "~/lib/trpc/client";
 import { createRouteAction, useRouteData } from "solid-start";
 
 export default function Todo() {
 
   // bring the route data into our component
-  const r = useRouteData()();
-
-  // define todos
-  const todos = r?.result?.data?.getTodos
+  const todos = useRouteData();
 
   // define a form for creating a todo using solid-states action system
   const [_, { Form }] = createRouteAction(async (formData) => {
-    await gqlCall(CREATE_TODO(formData.get("message")))
+    // take form input and submit input to server using client
+    await client.createTodo.mutate({message: formData.get("message")})
   });
 
   return (
     <div>
       <ul>
-        {todos.map((todo) => (
+        {todos()?.map((todo) => (
           <li>{todo.message}</li>
         ))}
       </ul>
