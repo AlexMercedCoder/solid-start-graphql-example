@@ -1,24 +1,20 @@
-import { Title } from "solid-start";
-import Todo from "~/components/Todo";
 import { createRouteData } from "solid-start";
-import { client } from "~/lib/trpc/client";
+import Trips from "~/components/Trips";
 
 // define our route data, server provided data to frontend
 export function routeData() {
 return createRouteData(async () => {
-  // fetch todos using client
-  const todos = await client.getTodos.query()
-
-  // return todos
-  return await todos;
+  // fetch data from api endpoint
+  const response = await fetch("http://localhost:3000/api/trips")
+  const data = await response.json()
+  return data
 });
 }
 
 export default function Home() {
   return (
     <main>
-      <Title>Todo App</Title>
-      <Todo/>
+      <Trips/>
     </main>
   );
 }
